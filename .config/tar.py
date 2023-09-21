@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import subprocess as sp
 import re, tempfile
@@ -53,12 +53,7 @@ def my_check_output(*popenargs, **kwargs):
     if cmd is None:
         cmd = popenargs[0]
     x.debug("exec: %s", cmd)
-    process = sp.Popen(stdout=sp.PIPE, *popenargs, **kwargs)
-    output, unused_err = process.communicate()
-    retcode = process.poll()
-    if retcode:
-        raise sp.CalledProcessError(retcode, cmd, output=output)
-    return output
+    return sp.check_output(*popenargs, universal_newlines=True, **kwargs)
 
 def svn_is_used():
     f = open('/dev/null', 'w')

@@ -90,11 +90,11 @@ def detect_project_version():
 
 # Give a summary on created configuration
 def report():
-    str = "Configuration:\n"
-    str += "  Sound plugin:  "
+    rstr = "Configuration:\n"
+    rstr += "  Sound plugin:  "
     if opt('sound'):
-        str += "yes\n"
+        rstr += "yes\n"
     else:
-        str += "no\n"
-    print str,
+        rstr += "no\n"
+    print(rstr)
 

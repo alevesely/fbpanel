@@ -1,8 +1,4 @@
-#!/usr/bin/python
-
-import sys
-if sys.version_info < (2, 7):
-    sys.path.insert(0, '.config')
+#!/usr/bin/python3
 
 ##########################################################
 ###   Arg Parser                                       ###
@@ -44,7 +40,7 @@ class SmartHelpFmt(argparse.RawDescriptionHelpFormatter):
             print(g)
         text = super(SmartHelpFmt, self)._format_usage(usage,
             actions, groups, prefix)
-        # print "Usage", text
+        # print("Usage", text)
         return text
 
     def format_help(self):
@@ -68,12 +64,12 @@ class ArgParse(argparse.ArgumentParser):
 
     def add_argument_group(self, name, title=None, description=None,
         default = None):
-        # print "add_argument_group: '%s'" % name, title, description, default
+        # print("add_argument_group: '%s'" % name, title, description, default)
         if name in self.help_groups:
             raise BaseException("help group %s already exists" % name)
         self.help_groups[name] = super(ArgParse,
             self).add_argument_group(title, description)
-        if name != 'help' and len(name.split()) == 1:
+        if name != 'help' and name != 'options' and len(name.split()) == 1:
             self.add_argument("--help-" + name, group = 'help',
                 action = 'store_true',
                 help = "Help on " + title)
@@ -82,7 +78,7 @@ class ArgParse(argparse.ArgumentParser):
         return self.help_groups[name]
 
     def add_argument(self, *args, **kw):
-        # print "add_argument:", args, kw
+        # print("add_argument:", args, kw)
         if 'group' in kw:
             group = self.help_groups[kw['group']]
             del kw['group']
@@ -330,7 +326,8 @@ def write_config():
             v = int(v)
 
         smake += "%s := %s\n" % (name.upper(), str(v))
-        if type(v) == str or type(v) == unicode:
+        # print("type: ", type(v))
+        if type(v) == str:
             v = '"' + v + '"'
         sc += '#define %s  %s\n' % (name.upper(), str(v))
     smake += "\n"
@@ -497,6 +494,7 @@ if __name__ == "__main__":
         code = compile(open(name, "r").read(), name, 'exec')
         exec(code)
     except:
-        x.info("Can't read .config/options.py")
+        x.critical("Can't read " + name)
+        x.error(repr(sys.exception()))
         pass
     main()

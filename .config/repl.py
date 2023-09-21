@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import re, sys
 
@@ -14,5 +14,5 @@ def repl_func(matchobj):
         return matchobj.group(0)
 
 
-print re.sub('@\w+@', repl_func, sys.stdin.read())
+print(re.sub('@\w+@', repl_func, sys.stdin.read()))
 
