@@ -1,3 +1,7 @@
+#This fork
+Upgraded configure scripts to Python3.
+
+
 # fbpanel
 A lightweight gtk2 panel for Linux desktop.
 
