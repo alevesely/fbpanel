@@ -4,7 +4,7 @@
 ###   Arg Parser                                       ###
 ##########################################################
 
-import argparse, textwrap
+import argparse, textwrap, re
 
 class ToggleAction(argparse.Action):
     def __init__(self, **kw):
@@ -252,6 +252,18 @@ def opt_new(name, **kw):
     opts[name] = d
     opt_order.append(name)
 
+rex = None
+# Use -isystem to include system directories.  That way included
+# directories get the same special treatment that is applied to the 
+# standard system directories.  In particular, they are exempted
+# from deprecation warnings that affect gtk2.
+def use_isystem(string):
+    global rex
+    if rex is None:
+        rex = re.compile('-I */usr/')
+
+    return rex.sub('-isystem /usr/', string)
+
 # Creates set of variables from pkg-config output.
 # First, it creates var for cflags and libs
 #   vname_cflags :: pkg-config pname --cflags
@@ -281,7 +293,7 @@ def opt_new_from_pkg(vname, pname, pvars = [], pversion = "", required = True):
     opt_new(vname + '_libs',
         default = my_check_output(cmd + ['--libs']))
     opt_new(vname + '_cflags',
-        default = my_check_output(cmd + ['--cflags']))
+        default = use_isystem(my_check_output(cmd + ['--cflags'])))
     opt_new(vname + '_version',
         default = my_check_output(cmd + ['--modversion']))
     for v in pvars:
